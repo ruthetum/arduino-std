@@ -6,11 +6,14 @@ void setup() {
 }
 
 void loop() {
-  char x = Serial.read();
+  if (Serial.available() > 0) {
+    char x = Serial.read();
   
-  if (x == 'o') {
-    digitalWrite(LED, LOW);
-  } else {
-    digitalWrite(LED, HIGH);
+    if (x == 'o') {
+      digitalWrite(LED, LOW);
+    } else {
+      digitalWrite(LED, HIGH);
+    }
   }
+  
 }

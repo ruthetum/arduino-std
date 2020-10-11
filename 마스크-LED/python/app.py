@@ -11,11 +11,12 @@ arduino = serial.Serial('COM4', 9600)
 
 # 마스크 착용 여부 분류
 def classify(frame):
-	prediction = model.predict(frame)
-	if prediction[0][0] > 0.5:
-		return "Mask"
-	else:
-		return "None"
+    prediction = model.predict(frame)
+    print(prediction)
+    if prediction[0][0] > 0.7:
+        return "Mask"
+    elif prediction[0][2] > 0.5 or prediction[0][1] > prediction[0][2]:
+        return "None"
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 320)
@@ -23,7 +24,7 @@ cap.set(4, 240)
 
 # 아두이노 시리얼 통신
 def toArduino(result):
-    if (result is "Mask"):
+    if (result == "Mask"):
         x = 'o'
     else:
         x = 'x'
@@ -52,7 +53,6 @@ while(True):
     result = classify(frame_reshape)
     # 아두이노 시리얼 통신
     toArduino(result)
-    # print(result)
 
     # 이미지 출력
     cv2.imshow('You wear a mask?', frame)
